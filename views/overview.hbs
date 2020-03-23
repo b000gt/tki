@@ -1,0 +1,15 @@
+{{#if hasWarning}}
+    <p>Warning: {{warning}}</p>
+{{/if}}
+<h1>A Title</h1>
+<h2>Your Name: {{username}}</h2>
+<div class="rooms">
+    {{#each rooms}}
+        <div class="room">
+            <a href="/room/{{id}}">
+                <h4>{{name}}</h4>
+            </a>
+        </div>
+    {{/each}}
+    <div class="room newRoom"><a href="/newRoom">+</a></div>
+</div>
