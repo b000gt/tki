@@ -1,15 +1,35 @@
-{{#if hasWarning}}
-    <p>Warning: {{warning}}</p>
-{{/if}}
-<h1>A Title</h1>
-<h2>Your Name: {{username}}</h2>
-<div class="rooms">
+<h1 class="bd-title">Overview</h1>
+<div class="container col-md-12 row" id="roomList">
     {{#each rooms}}
-        <div class="room">
-            <a href="/room/{{id}}">
-                <h4>{{name}}</h4>
+    <div class="col-md-3 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="card-title"><h2>{{name}}</h2></div>
+                <div class="card-subtitle text-muted">Created by: {{createdBy}}</div>
+                <hr>
+                <div class="card-text"><a href="/room/enter/{{id}}" class="btn btn-success">Enter Room</a></div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>
+<div class="container col-12 row">
+    <div class="col-md-3 mb-3">
+        <div class="card">
+            <a href="/room/new">
+                <div class="card-body">
+                    <div class="card-title">
+                        <i class="fa fa-plus"></i>
+                    </div>
+                    <div class="card-subtitle mb-2 text-muted">Create new Room</div>
+                </div>
             </a>
         </div>
-    {{/each}}
-    <div class="room newRoom"><a href="/newRoom">+</a></div>
+    </div>
 </div>
+<script>
+    const socket = io();
+    socket.on('room created', function(room){
+        console.log('vkihfbev');
+    });
+</script>

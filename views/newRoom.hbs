@@ -1,5 +1,8 @@
-<h1>Make a new Room</h1>
-<form method="post" action="/addRoom">
-    Name: <input type="text" name="name" value="{{roomname}}">
-    <button type="submit">Create</button>
+<h1 class="bd-title">New Room</h1>
+<form method="post" action="/room/add" class="col-6">
+    <div class="form-group">
+        <label for="name">Room Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{roomname}}">
+    </div>
+    <button type="submit" class="btn btn-primary" id="createButton">Create Room</button>
 </form>

@@ -2,9 +2,64 @@
 <html>
   <head>
     <title>{{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+      <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+      <!-- Popper JS -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+      <!-- Latest compiled JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+          $(function () {
+              var socket = io();
+              socket.on('snackbar', function(msg){
+                  $('.toast-container').append('' +
+                          '<div class="toast md-1" data-autohide="false">' +
+                          '<div class="toast-header">' +
+                          '<strong class="mr-auto">' +
+                          msg.title +
+                          '</strong>' +
+                          '<button type="button" class="ml-2 mb-1 close" data-dismiss="toast">' +
+                          '<span aria-hidden="true">' +
+                          '<i class="fa fa-times"></i>' +
+                          '</span>' +
+                          '</button>' +
+                          '</div>' +
+                          '<div class="toast-body">' +
+                          msg.body +
+                          '</div>' +
+                          '</div>'
+                  );
+                  $('.toast:last').toast('show');
+              });
+          });
+      </script>
+      <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-    {{{body}}}
+      {{#if user.name}}
+      <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+          <div class="navbar-nav mr-auto">
+              <a class="navbar-brand" href="/">My Boyyy</a>
+                  <a class="nav-link nav-item active" href="/overview">Home</a>
+          </div>
+          <span class="navbar-text">Name: {{user.name}}</span>
+      </nav>
+      {{/if}}
+      {{#if warning}}
+          <div class="alert alert-danger">
+              {{warning}}
+          </div>
+      {{/if}}
+      <div class="col-md-12">
+        {{{body}}}
+      </div>
+      <div class="toast-container"></div>
   </body>
 </html>

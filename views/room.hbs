@@ -1,2 +1,29 @@
-<h1>{{room.name}}</h1>
-<p>{{room.id}}</p>
+<h1 class="bd-title" id="roomName">{{room.name}}</h1>
+<div class="list-group mb-3">
+    <div class="list-group-item d-flex justify-content-between">
+        <div class="mb-1">ID</div>
+        <small class="text-muted" id="gameId">{{room.id}}</small>
+    </div>
+    {{#each room.players}}
+        <div class="list-group-item d-flex justify-content-between">
+            {{this}}
+        </div>
+    {{/each}}
+</div>
+<a href="/room/leave/{{room.id}}" class="btn btn-info mb-3"><i class="fa fa-arrow-left"></i> Back</a>
+<div class="jumbotron">
+    <h3 class="display-6">Game has not started yet</h3>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg" role="button" id="startGame">Start the Game <i class="fa fa-gamepad"></i></a>
+</div>
+<script>
+    const socket = io();
+    document.getElementById('startGame').addEventListener('click', function(element){
+        console.log('gamestart');
+        socket.emit('game started', document.getElementById('gameId').innerText);
+    });
+    socket.on('start game ' + document.getElementById('gameId').innerText, function(gameId){
+        document.getElementById('startGame').innerText = "Game started..";
+    });
+    socket.emit('room created', document.getElementById('roomName').innerText);
+</script>

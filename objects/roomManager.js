@@ -9,5 +9,10 @@ class RoomManager{
     getNextId(){
         return this.idCounter ++;
     }
+    deleteRoom(room){
+        this.rooms = array.filter(function(value, index, arr){
+            return value != room;
+        });
+    }
 }
 module.exports = new RoomManager();

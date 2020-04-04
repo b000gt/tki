@@ -1,16 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var session = require('express-session')
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const session = require('express-session');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+
+const indexRouter = require('./routes/index');
+const roomsRouter = require('./routes/room');
+const loginMiddleware = require('./middleware/loginMiddleware');
+const viewOptionsMiddleware = require('./middleware/viewOptionsMiddleware');
 
 var app = express();
 
-app.use(session({resave: true, saveUninitialized: true, secret: 'fdagrwwgr', cookie: { maxAge: 60000 }}));
+app.use(session({resave: true, saveUninitialized: true, secret: 'fdagrwwgr', cookie: { maxAge: 600000 }}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,8 +25,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(loginMiddleware);
+app.use(viewOptionsMiddleware);
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/room', roomsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
