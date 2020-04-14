@@ -1,35 +1,31 @@
-<h1 class="bd-title">Overview</h1>
-<div class="container col-md-12 row" id="roomList">
+<h2>Overview</h2>
+<a href="/room/new" class="waves-effect btn cyan darken-3 white-text">
+    New Room
+</a>
+<div class="row" id="roomList">
     {{#each rooms}}
-    <div class="col-md-3 mb-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="card-title"><h2>{{name}}</h2></div>
-                <div class="card-subtitle text-muted">Created by: {{createdBy}}</div>
-                <hr>
-                <div class="card-text"><a href="/room/enter/{{id}}" class="btn btn-success">Enter Room</a></div>
+    <div class="col s4">
+        <div class="card cyan lighten-2 hoverable">
+            <div class="card-content">
+                <div class="card-title">{{name}}</div>
+                Created by: {{createdBy.name}}
+                <div class="card-action"><a href="/room/enter/{{id}}" class="btn waves-effect cyan lighten-5 black-text">Enter Room</a></div>
             </div>
         </div>
     </div>
     {{/each}}
 </div>
-<div class="container col-12 row">
-    <div class="col-md-3 mb-3">
-        <div class="card">
-            <a href="/room/new">
-                <div class="card-body">
-                    <div class="card-title">
-                        <i class="fa fa-plus"></i>
-                    </div>
-                    <div class="card-subtitle mb-2 text-muted">Create new Room</div>
-                </div>
-            </a>
-        </div>
-    </div>
-</div>
 <script>
     const socket = io();
-    socket.on('room created', function(room){
-        console.log('vkihfbev');
+    socket.on('new room', function(room){
+        $("#roomList").append('<div class="col s4">' +
+                '<div class="card cyan lighten-2 hoverable">' +
+                '<div class="card-content">' +
+                '<div class="card-title">'+room.name+'</div>' +
+                'Created by: '+room.createdBy.name+'' +
+                '<div class="card-action"><a href="/room/enter/'+room.id+'" class="btn waves-effect cyan lighten-5 black-text">Enter Room</a></div>' +
+                '</div>' +
+                '</div>' +
+                '</div>');
     });
 </script>

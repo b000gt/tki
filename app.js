@@ -12,6 +12,7 @@ const loginMiddleware = require('./middleware/loginMiddleware');
 const viewOptionsMiddleware = require('./middleware/viewOptionsMiddleware');
 
 var app = express();
+var io = require('socket.io').listen(app.listen(3000));
 
 app.use(session({resave: true, saveUninitialized: true, secret: 'fdagrwwgr', cookie: { maxAge: 600000 }}));
 
@@ -24,6 +25,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+io.sockets.on('connection', function (socket) {
+  console.log('client connect');
+  socket.on('echo', function (data) {
+    console.log('echo: '+ data);
+    io.sockets.emit('message', data);
+  });
+  socket.on('start room', function(roomId){
+    io.sockets.emit('start room ' + roomId, roomId);
+  });
+  socket.on('stop room', function(roomId){
+    io.sockets.emit('stop room ' + roomId, roomId);
+  });
+});
+
+app.use(function(req,res,next){
+  req.io = io;
+  next();
+});
 
 app.use(loginMiddleware);
 app.use(viewOptionsMiddleware);

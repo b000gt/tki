@@ -1,29 +1,42 @@
-<h1 class="bd-title" id="roomName">{{room.name}}</h1>
-<div class="list-group mb-3">
-    <div class="list-group-item d-flex justify-content-between">
-        <div class="mb-1">ID</div>
-        <small class="text-muted" id="gameId">{{room.id}}</small>
-    </div>
+<ul class="collection with-header" id="room-infos">
+    <li class="collection-header"><h4>{{room.name}}</h4></li>
+    <li class="collection-item">ID<span class="secondary-content">{{room.id}}</span></li>
     {{#each room.players}}
-        <div class="list-group-item d-flex justify-content-between">
-            {{this}}
-        </div>
+        <li class="collection-item" id="{{@index}}">{{this}}</li>
     {{/each}}
-</div>
-<a href="/room/leave/{{room.id}}" class="btn btn-info mb-3"><i class="fa fa-arrow-left"></i> Back</a>
-<div class="jumbotron">
-    <h3 class="display-6">Game has not started yet</h3>
-    <hr class="my-4">
-    <a class="btn btn-primary btn-lg" role="button" id="startGame">Start the Game <i class="fa fa-gamepad"></i></a>
-</div>
+</ul>
+<a href="#" id="start-room-{{room.id}}" class="btn">Start</a>
+<a href="#" id="stop-room-{{room.id}}" class="btn hide">Started</a>
+<a href="/room/leave/{{room.id}}" class="btn">Leave</a>
 <script>
     const socket = io();
-    document.getElementById('startGame').addEventListener('click', function(element){
-        console.log('gamestart');
-        socket.emit('game started', document.getElementById('gameId').innerText);
+    socket.on('entered room ' + {{room.id}}, function(user){
+        M.toast({
+            html: user.name + ' entered this Room',
+            classes: 'rounded'
+        });
+        $('#room-infos').append('<li class="collection-item" id="user-'+user.id+'">'+user.name+'</li>');
     });
-    socket.on('start game ' + document.getElementById('gameId').innerText, function(gameId){
-        document.getElementById('startGame').innerText = "Game started..";
+    socket.on('left room ' + {{room.id}}, function(user){
+        M.toast({
+            html: user.name + ' left this Room',
+            classes: 'rounded'
+        });
+        $('#user-'+user.id).remove();
     });
-    socket.emit('room created', document.getElementById('roomName').innerText);
+    socket.on('start room ' + {{room.id}}, function(roomId){
+        $('#stop-room-{{room.id}}').removeClass('hide');
+        $('#start-room-{{room.id}}').addClass('hide');
+    });
+    $('#start-room-{{room.id}}').click(function(){
+        socket.emit('start room', {{room.id}});
+    });
+    socket.on('stop room ' + {{room.id}}, function(roomId){
+        $('#start-room-{{room.id}}').removeClass('hide');
+        $('#stop-room-{{room.id}}').addClass('hide');
+    });
+    $('#stop-room-{{room.id}}').click(function(){
+        socket.emit('stop room', {{room.id}});
+    });
+
 </script>

@@ -11,6 +11,8 @@ router.get('/new', function(req, res, next) {
 router.post('/add', function(req, res, next){
   let newRoom = new Room(req.body.name, roomManager.getNextId(), req.session.user);
   roomManager.addRoom(newRoom);
+  req.io.emit('toast', 'Room: ' + newRoom.name + ' created');
+  req.io.emit('new room', newRoom);
   res.redirect('/room/enter/'+newRoom.id);
 });
 
@@ -18,8 +20,11 @@ router.get('/enter/:id', function(req, res, next){
   let rooms = roomManager.rooms.filter((room) => {return room.id == req.params.id});
   if(rooms.length == 1){
     let room = rooms[0];
-    if(room.canEnter(req.session.user.id)){
-      room.enter(req.session.user.id);
+    if(room.canEnter(req.session.user)){
+      if(!room.players[req.session.user.id]){
+        room.enter(req.session.user);
+        req.io.emit('entered room ' + room.id, req.session.user);
+      }
       req.viewOptions['room'] = room;
       res.render('room', req.viewOptions);
     } else{
@@ -35,14 +40,17 @@ router.get('/enter/:id', function(req, res, next){
 router.get('/leave/:id', function(req, res, next){
   let rooms = roomManager.rooms.filter((room) => {return room.id == req.params.id});
   if(rooms.length == 1){
-
+    let room = rooms[0];
+    room.leave(req.session.user);
+    req.io.emit('left room ' + room.id, req.session.user);
+    res.redirect('/overview');
   } else{
     req.session.warning = 'Room does not exist';
     res.redirect('/overview');
   }
 });
 
-router.post('/getAll', function(req, res, next){
+router.get('/getAll', function(req, res, next){
   res.json(roomManager.rooms);
 });
 module.exports = router;
