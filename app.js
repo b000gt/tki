@@ -13,7 +13,8 @@ const loginMiddleware = require('./middleware/loginMiddleware');
 const viewOptionsMiddleware = require('./middleware/viewOptionsMiddleware');
 
 var app = express();
-var io = require('socket.io').listen(app.listen(8080));
+const http = require('http').createServer(app);
+var io = require('socket.io')(http);
 
 app.use(session({resave: true, saveUninitialized: true, secret: 'fdagrwwgr', cookie: { maxAge: 600000 }}));
 
@@ -64,5 +65,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-module.exports = app;
+http.listen(8080, () => {
+  console.log('listening on *:8080');
+});
