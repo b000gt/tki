@@ -6,6 +6,19 @@ module.exports = class Room{
         this.hasStarted = false;
         this.createdBy = user;
         this.limit = 2;
+        this.dimensions = {
+            x: 6,
+            y: 8,
+        };
+        this.board = {};
+        let i;
+        let y;
+        for(i = 0; i < this.dimensions.y; i++){
+            this.board[i] = {};
+            for(y = 0; y < this.dimensions.x; y++){
+                this.board[i][y] = null;
+            }
+        }
     }
     canEnter(user){
         return Object.keys(this.players).length < this.limit || this.players[user.id];
@@ -22,5 +35,17 @@ module.exports = class Room{
     }
     start(){
         this.hasStarted = true;
+    }
+    stop(){
+        this.hasStarted = false;
+    }
+    put(position, player){
+        var y;
+        for(y = 0; y < this.dimensions.y; y++){
+            if((y+1) >= this.dimensions.y || this.board[(y+1)][position] != null){
+                this.board[y][position] = player.name;
+                return;
+            }
+        }
     }
 };

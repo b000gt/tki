@@ -16,7 +16,7 @@ var app = express();
 const http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
-app.use(session({resave: true, saveUninitialized: true, secret: 'fdagrwwgr', cookie: { maxAge: 600000 }}));
+app.use(session({resave: true, saveUninitialized: true, secret: 'fdagrwwgr', cookie: { maxAge: null }}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +36,9 @@ io.sockets.on('connection', function (socket) {
   });
   socket.on('change room', function(roomId){
     io.sockets.emit('change room ' + roomId, roomId);
+  });
+  socket.on('change board', function(roomId){
+    io.sockets.emit('change board ' + roomId, roomId);
   });
 });
 

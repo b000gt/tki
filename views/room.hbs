@@ -5,6 +5,27 @@
 <a href="#" id="start-room-{{room.id}}" class="btn">Start</a>
 <a href="#" id="stop-room-{{room.id}}" class="btn hide">Started</a>
 <a href="/rooms/{{room.id}}/leave" class="btn">Leave</a>
+<div class="hide col s12" id="board">
+    <table>
+        <thead>
+            <tr>
+            {{#with room.board.[0]}}
+                {{#each this}}
+                {{this}}
+                <th><a href="#" class="move btn" data-position="{{@index}}">{{@index}}</a></th>
+                {{/each}}
+            {{/with}}
+            </tr>
+            {{#each room.board}}
+                <tr class="data-row-{{@index}}">
+                {{#each this}}
+                    <td class="data-pos-{{@index}}">{{this}}</td>
+                {{/each}}
+                </tr>
+            {{/each}}
+        </thead>
+    </table>
+</div>
 <script src="/javascripts/room.js"></script>
 <script>
     const socket = io();
@@ -26,6 +47,9 @@
     socket.on('change room ' + {{room.id}}, function(roomId){
         updateRoom({{room.id}});
     });
+    socket.on('change board ' + {{room.id}}, function(roomId){
+        updateBoard({{room.id}});
+    });
     $('#start-room-{{room.id}}').click(function(){
         fetch('/rooms/' + {{room.id}} + '/start').then(
             res => {
@@ -37,6 +61,14 @@
         fetch('/rooms/' + {{room.id}} + '/stop').then(
                 res => {
                     socket.emit('change room', {{room.id}});
+                }
+        );
+    });
+    $('.move').click(function(obj){
+        let position = $(this).attr('data-position');
+        fetch('/api/rooms/' + {{room.id}} + '/play/'+position).then(
+                res => {
+                    socket.emit('change board', {{room.id}});
                 }
         );
     });

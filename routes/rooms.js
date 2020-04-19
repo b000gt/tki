@@ -25,6 +25,7 @@ router.get('/:id/enter', function(req, res, next){
         req.io.emit('entered room ' + room.id, req.session.user);
       }
       req.viewOptions['room'] = room;
+      console.log(room);
       res.render('room', req.viewOptions);
     } else{
       req.session.warning = 'Room is Full';
@@ -56,7 +57,7 @@ router.get('/:id/start', function(req, res){
   console.log('start game..');
   let room = roomManager.rooms[req.params.id];
   if(room != undefined){
-    room.hasStarted = true;
+    room.start();
   }
   res.send();
 });
@@ -64,7 +65,7 @@ router.get('/:id/start', function(req, res){
 router.get('/:id/stop', function(req, res){
   let room = roomManager.rooms[req.params.id];
   if(room != undefined){
-    room.hasStarted = false;
+    room.stop();
   }
   res.send();
 });
