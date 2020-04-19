@@ -13,7 +13,7 @@ const loginMiddleware = require('./middleware/loginMiddleware');
 const viewOptionsMiddleware = require('./middleware/viewOptionsMiddleware');
 
 var app = express();
-var io = require('socket.io').listen(app.listen(3000));
+var io = require('socket.io').listen(app.listen(8080));
 
 app.use(session({resave: true, saveUninitialized: true, secret: 'fdagrwwgr', cookie: { maxAge: 600000 }}));
 
