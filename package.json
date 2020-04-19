@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./app.js",
-    "start-docker": "docker-compose down && docker-compose build && docker-compose up"
+    "start-docker": "docker-compose down && docker-compose build && docker-compose up -d"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.10",
