@@ -1,18 +1,16 @@
 class RoomManager{
     constructor(){
-        this.rooms = [];
+        this.rooms = {};
         this.idCounter = 0;
     }
     addRoom(room){
-        this.rooms.push(room);
+        this.rooms[room.id] = room;
     }
     getNextId(){
         return this.idCounter ++;
     }
     deleteRoom(room){
-        this.rooms = array.filter(function(value, index, arr){
-            return value != room;
-        });
+        delete this.rooms[room.id];
     }
 }
 module.exports = new RoomManager();

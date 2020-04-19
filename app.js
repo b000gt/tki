@@ -7,7 +7,8 @@ const session = require('express-session');
 
 
 const indexRouter = require('./routes/index');
-const roomsRouter = require('./routes/room');
+const roomsRouter = require('./routes/rooms');
+const apiRoomsRouter = require('./routes/api/rooms');
 const loginMiddleware = require('./middleware/loginMiddleware');
 const viewOptionsMiddleware = require('./middleware/viewOptionsMiddleware');
 
@@ -32,11 +33,8 @@ io.sockets.on('connection', function (socket) {
     console.log('echo: '+ data);
     io.sockets.emit('message', data);
   });
-  socket.on('start room', function(roomId){
-    io.sockets.emit('start room ' + roomId, roomId);
-  });
-  socket.on('stop room', function(roomId){
-    io.sockets.emit('stop room ' + roomId, roomId);
+  socket.on('change room', function(roomId){
+    io.sockets.emit('change room ' + roomId, roomId);
   });
 });
 
@@ -48,7 +46,8 @@ app.use(function(req,res,next){
 app.use(loginMiddleware);
 app.use(viewOptionsMiddleware);
 app.use('/', indexRouter);
-app.use('/room', roomsRouter);
+app.use('/rooms', roomsRouter);
+app.use('/api/rooms', apiRoomsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

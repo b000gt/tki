@@ -1,14 +1,8 @@
 <h1 class="bd-title">Login</h1>
-<form method="post" action="/" class="col-6">
+<form method="post" action="/" class="col s6">
     <div class="form-group">
         <label for="name">Nickname</label>
         <input type="text" class="form-control" id="name" name="name">
     </div>
     <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
 </form>
-<script>
-    const socket = io();
-    document.getElementById('submitButton').addEventListener('click', function(element){
-        socket.emit('user connected', document.getElementById('name').value);
-    });
-</script>

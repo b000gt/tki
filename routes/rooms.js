@@ -12,14 +12,13 @@ router.post('/add', function(req, res, next){
   let newRoom = new Room(req.body.name, roomManager.getNextId(), req.session.user);
   roomManager.addRoom(newRoom);
   req.io.emit('toast', 'Room: ' + newRoom.name + ' created');
-  req.io.emit('new room', newRoom);
-  res.redirect('/room/enter/'+newRoom.id);
+  req.io.emit('rooms changed');
+  res.redirect('/rooms/'+newRoom.id+'/enter');
 });
 
-router.get('/enter/:id', function(req, res, next){
-  let rooms = roomManager.rooms.filter((room) => {return room.id == req.params.id});
-  if(rooms.length == 1){
-    let room = rooms[0];
+router.get('/:id/enter', function(req, res, next){
+  let room = roomManager.rooms[req.params.id];
+  if(room != undefined){
     if(room.canEnter(req.session.user)){
       if(!room.players[req.session.user.id]){
         room.enter(req.session.user);
@@ -37,11 +36,14 @@ router.get('/enter/:id', function(req, res, next){
   }
 });
 
-router.get('/leave/:id', function(req, res, next){
-  let rooms = roomManager.rooms.filter((room) => {return room.id == req.params.id});
-  if(rooms.length == 1){
-    let room = rooms[0];
+router.get('/:id/leave', function(req, res, next){
+  let room = roomManager.rooms[req.params.id];
+  if(room != undefined){
     room.leave(req.session.user);
+    if(Object.keys(room.players).length == 0){
+      roomManager.deleteRoom(room);
+      req.io.emit('rooms changed');
+    }
     req.io.emit('left room ' + room.id, req.session.user);
     res.redirect('/overview');
   } else{
@@ -50,7 +52,20 @@ router.get('/leave/:id', function(req, res, next){
   }
 });
 
-router.get('/getAll', function(req, res, next){
-  res.json(roomManager.rooms);
+router.get('/:id/start', function(req, res){
+  console.log('start game..');
+  let room = roomManager.rooms[req.params.id];
+  if(room != undefined){
+    room.hasStarted = true;
+  }
+  res.send();
+});
+
+router.get('/:id/stop', function(req, res){
+  let room = roomManager.rooms[req.params.id];
+  if(room != undefined){
+    room.hasStarted = false;
+  }
+  res.send();
 });
 module.exports = router;

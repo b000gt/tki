@@ -1,42 +1,43 @@
 <ul class="collection with-header" id="room-infos">
-    <li class="collection-header"><h4>{{room.name}}</h4></li>
+    <li class="collection-header"><h4 id="roomname">{{room.name}}</h4></li>
     <li class="collection-item">ID<span class="secondary-content">{{room.id}}</span></li>
-    {{#each room.players}}
-        <li class="collection-item" id="{{@index}}">{{this}}</li>
-    {{/each}}
 </ul>
 <a href="#" id="start-room-{{room.id}}" class="btn">Start</a>
 <a href="#" id="stop-room-{{room.id}}" class="btn hide">Started</a>
-<a href="/room/leave/{{room.id}}" class="btn">Leave</a>
+<a href="/rooms/{{room.id}}/leave" class="btn">Leave</a>
+<script src="/javascripts/room.js"></script>
 <script>
     const socket = io();
+    updateRoom({{room.id}});
     socket.on('entered room ' + {{room.id}}, function(user){
         M.toast({
             html: user.name + ' entered this Room',
             classes: 'rounded'
         });
-        $('#room-infos').append('<li class="collection-item" id="user-'+user.id+'">'+user.name+'</li>');
+        updateRoom({{room.id}});
     });
     socket.on('left room ' + {{room.id}}, function(user){
         M.toast({
             html: user.name + ' left this Room',
             classes: 'rounded'
         });
-        $('#user-'+user.id).remove();
+        updateRoom({{room.id}});
     });
-    socket.on('start room ' + {{room.id}}, function(roomId){
-        $('#stop-room-{{room.id}}').removeClass('hide');
-        $('#start-room-{{room.id}}').addClass('hide');
+    socket.on('change room ' + {{room.id}}, function(roomId){
+        updateRoom({{room.id}});
     });
     $('#start-room-{{room.id}}').click(function(){
-        socket.emit('start room', {{room.id}});
-    });
-    socket.on('stop room ' + {{room.id}}, function(roomId){
-        $('#start-room-{{room.id}}').removeClass('hide');
-        $('#stop-room-{{room.id}}').addClass('hide');
+        fetch('/rooms/' + {{room.id}} + '/start').then(
+            res => {
+                socket.emit('change room', {{room.id}});
+            }
+        );
     });
     $('#stop-room-{{room.id}}').click(function(){
-        socket.emit('stop room', {{room.id}});
+        fetch('/rooms/' + {{room.id}} + '/stop').then(
+                res => {
+                    socket.emit('change room', {{room.id}});
+                }
+        );
     });
-
 </script>

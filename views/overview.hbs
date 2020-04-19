@@ -1,31 +1,14 @@
 <h2>Overview</h2>
-<a href="/room/new" class="waves-effect btn cyan darken-3 white-text">
+<a href="/rooms/new" class="waves-effect btn cyan darken-3 white-text">
     New Room
 </a>
 <div class="row" id="roomList">
-    {{#each rooms}}
-    <div class="col s4">
-        <div class="card cyan lighten-2 hoverable">
-            <div class="card-content">
-                <div class="card-title">{{name}}</div>
-                Created by: {{createdBy.name}}
-                <div class="card-action"><a href="/room/enter/{{id}}" class="btn waves-effect cyan lighten-5 black-text">Enter Room</a></div>
-            </div>
-        </div>
-    </div>
-    {{/each}}
 </div>
+<script src="/javascripts/overview.js"></script>
 <script>
+    updateRooms();
     const socket = io();
-    socket.on('new room', function(room){
-        $("#roomList").append('<div class="col s4">' +
-                '<div class="card cyan lighten-2 hoverable">' +
-                '<div class="card-content">' +
-                '<div class="card-title">'+room.name+'</div>' +
-                'Created by: '+room.createdBy.name+'' +
-                '<div class="card-action"><a href="/room/enter/'+room.id+'" class="btn waves-effect cyan lighten-5 black-text">Enter Room</a></div>' +
-                '</div>' +
-                '</div>' +
-                '</div>');
+    socket.on('rooms changed', function(){
+        updateRooms();
     });
 </script>
