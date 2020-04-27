@@ -10,14 +10,16 @@ router.get('/', function(req, res, next){
 });
 
 router.get('/logout', function(req, res, next){
+  let roomId = null;
   for(let index in roomManager.rooms){
     if(roomManager.rooms[index].players[req.session.user.id]){
+      roomId = roomManager.rooms[index].id;
       roomManager.rooms[index].leave(req.session.user);
       if(Object.keys(roomManager.rooms[index].players).length == 0){
         roomManager.deleteRoom(roomManager.rooms[index]);
         req.io.emit('rooms changed');
       }
-      req.io.emit('left room ' + roomManager.rooms[index].id, req.session.user);
+      req.io.emit('left room ' + roomId, req.session.user);
     }
   }
   delete req.session.user;
