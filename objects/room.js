@@ -21,7 +21,7 @@ module.exports = class Room{
     }
     enter(user){
         if(!this.players[user.id]){
-            this.players[user.id] = user.name;
+            this.players[user.id] = user;
             user.room = this.id;
         }
     }
@@ -40,8 +40,7 @@ module.exports = class Room{
         for(y = 0; y < this.dimensions.y; y++){
             if((y+1) >= this.dimensions.y || this.board[(y+1)][position] != null){
                 this.board[y][position] = player;
-                if(this.hasWon(position, y, 0, DIRECTIONS.UP, player) || this.hasWon(position, y, 0, DIRECTIONS.DOWN, player) || this.hasWon(position, y, 0, DIRECTIONS.LEFT, player) || this.hasWon(position, y, 0, DIRECTIONS.RIGHT, player)
-                    || this.hasWon(position, y, 0, DIRECTIONS.UPLEFT, player) || this.hasWon(position, y, 0, DIRECTIONS.UPRIGHT, player) || this.hasWon(position, y, 0, DIRECTIONS.DOWNLEFT, player) || this.hasWon(position, y, 0, DIRECTIONS.DOWNRIGHT, player)){
+                if(this.hasWon(position, y, player)){
                     this.winner = player;
                     return true;
                 } else{
@@ -50,29 +49,39 @@ module.exports = class Room{
             }
         }
     }
-    hasWon(posX, posY, before, direction, player){
-        if(posY < 0 || posX < 0 || posY >= this.dimensions.y || posX >= this.dimensions.x || this.board[posY][posX] === null || this.board[posY][posX].id != player.id){
-            return false;
-        } else if(before >= 3) {
+    hasWon(posX, posY, player){
+        if(this.checkPlayer(parseInt(posX) - 1, posY, 0, player, DIRECTIONS.LEFT) + this.checkPlayer(parseInt(posX) + 1, posY, 0, player, DIRECTIONS.RIGHT) >= 3 ||
+            this.checkPlayer(posX, parseInt(posY) - 1, 0, player, DIRECTIONS.UP) + this.checkPlayer(posX, parseInt(posY) + 1, 0, player, DIRECTIONS.DOWN) >= 3 ||
+            this.checkPlayer(parseInt(posX - 1), parseInt(posY) - 1, 0, player, DIRECTIONS.UPLEFT) + this.checkPlayer(parseInt(posX + 1), parseInt(posY) + 1, 0, player, DIRECTIONS.DOWNRIGHT) >= 3 ||
+            this.checkPlayer(parseInt(posX + 1), parseInt(posY) - 1, 0, player, DIRECTIONS.UPRIGHT) + this.checkPlayer(parseInt(posX - 1), parseInt(posY) + 1, 0, player, DIRECTIONS.DOWNLEFT) >= 3){
             return true;
         } else {
+            return false;
+        }
+    }
+    checkPlayer(posX, posY, amount, player, direction){
+        if(posX < 0 || posX >= this.dimensions.x || posY < 0 || posY >= this.dimensions.y){
+            return amount;
+        } else if(this.board[posY][posX] == null || this.board[posY][posX].id != player.id){
+            return amount;
+        } else{
             switch(direction){
                 case DIRECTIONS.UP:
-                    return this.hasWon(posX, parseInt(posY - 1), before + 1, direction, player); // unnötig
+                    return this.checkPlayer(posX, parseInt(posY) - 1, parseInt(amount) + 1, player, direction);
                 case DIRECTIONS.DOWN:
-                    return this.hasWon(posX, parseInt(posY + 1), before + 1, direction, player);
+                    return this.checkPlayer(posX, parseInt(posY) + 1, parseInt(amount) + 1, player, direction);
                 case DIRECTIONS.LEFT:
-                    return this.hasWon(parseInt(posX - 1), posY, before + 1, direction, player); // unnötig
+                    return this.checkPlayer(parseInt(posX) - 1, posY, parseInt(amount) + 1, player, direction);
                 case DIRECTIONS.RIGHT:
-                    return this.hasWon(parseInt(posX + 1), posY, before + 1, direction, player);
+                    return this.checkPlayer(parseInt(posX) + 1, posY, parseInt(amount) + 1, player, direction);
                 case DIRECTIONS.UPLEFT:
-                    return this.hasWon(parseInt(posX - 1), parseInt(posY -1), before + 1, direction, player);
+                    return this.checkPlayer(parseInt(posX) - 1, parseInt(posY) - 1, parseInt(amount) + 1, player, direction);
                 case DIRECTIONS.UPRIGHT:
-                    return this.hasWon(parseInt(posX + 1), parseInt(posY + 1), before + 1, direction, player);
+                    return this.checkPlayer(parseInt(posX) + 1, parseInt(posY) - 1, parseInt(amount) + 1, player, direction);
                 case DIRECTIONS.DOWNLEFT:
-                    return this.hasWon(parseInt(posX - 1), parseInt(posY + 1), before + 1, direction, player);
+                    return this.checkPlayer(parseInt(posX) - 1, parseInt(posY) + 1, parseInt(amount) + 1, player, direction);
                 case DIRECTIONS.DOWNRIGHT:
-                    return this.hasWon(parseInt(posX + 1), parseInt(posY - 1), before + 1, direction, player);
+                    return this.checkPlayer(parseInt(posX) + 1, parseInt(posY) + 1, parseInt(amount) + 1, player, direction);
             }
         }
     }
@@ -91,8 +100,6 @@ module.exports = class Room{
     nextPlayer(){
         let isNext = this.turn == null;
         for(let index in this.players){
-            console.log('isNext', isNext);
-            console.log(this.players[index], index);
             if(isNext){
                 this.turn = index;
                 return true;

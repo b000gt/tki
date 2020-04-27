@@ -18,7 +18,7 @@ function updateRoom(roomId){
             $('.player').remove();
             for(var playerId in data.players){
                 $('#room-infos').append('' +
-                    '<li class="collection-item player" id="player-'+playerId+'">'+data.players[playerId]+'</li>');
+                    '<li class="collection-item player '+data.players[playerId].color+'-text" id="player-'+playerId+'">'+data.players[playerId].name+'</li>');
             }
             if(data.hasStarted){
                 $("#start-room-"+roomId).addClass('hide');

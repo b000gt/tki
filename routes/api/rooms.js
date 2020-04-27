@@ -15,8 +15,10 @@ router.get('/:id', function(req, res, next) {
 router.get('/:id/play/:position', function(req, res){
     let room = roomManager.rooms[req.params.id];
     if(room != undefined){
-        room.put(req.params.position, req.session.user);
-        room.nextPlayer();
+        if(room.turn == req.session.user.id) {
+            room.put(req.params.position, req.session.user);
+            room.nextPlayer();
+        }
         res.json(room);
     }
 });
