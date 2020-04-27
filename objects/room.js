@@ -52,14 +52,21 @@ module.exports = class Room{
     hasWon(posX, posY, player){
         if(this.checkPlayer(parseInt(posX) - 1, posY, 0, player, DIRECTIONS.LEFT) + this.checkPlayer(parseInt(posX) + 1, posY, 0, player, DIRECTIONS.RIGHT) >= 3 ||
             this.checkPlayer(posX, parseInt(posY) - 1, 0, player, DIRECTIONS.UP) + this.checkPlayer(posX, parseInt(posY) + 1, 0, player, DIRECTIONS.DOWN) >= 3 ||
-            this.checkPlayer(parseInt(posX - 1), parseInt(posY) - 1, 0, player, DIRECTIONS.UPLEFT) + this.checkPlayer(parseInt(posX + 1), parseInt(posY) + 1, 0, player, DIRECTIONS.DOWNRIGHT) >= 3 ||
-            this.checkPlayer(parseInt(posX + 1), parseInt(posY) - 1, 0, player, DIRECTIONS.UPRIGHT) + this.checkPlayer(parseInt(posX - 1), parseInt(posY) + 1, 0, player, DIRECTIONS.DOWNLEFT) >= 3){
+            this.checkPlayer(parseInt(posX) - 1, parseInt(posY) - 1, 0, player, DIRECTIONS.UPLEFT) + this.checkPlayer(parseInt(posX) + 1, parseInt(posY) + 1, 0, player, DIRECTIONS.DOWNRIGHT) >= 3 ||
+            this.checkPlayer(parseInt(posX) + 1, parseInt(posY) - 1, 0, player, DIRECTIONS.UPRIGHT) + this.checkPlayer(parseInt(posX) - 1, parseInt(posY) + 1, 0, player, DIRECTIONS.DOWNLEFT) >= 3){
             return true;
         } else {
+            /* console.log('player', player.color, 'position', posX, '/', posY);
+            * console.log('\tleft:', this.checkPlayer(parseInt(posX) - 1, posY, 0, player, DIRECTIONS.LEFT), 'right:', this.checkPlayer(parseInt(posX) + 1, posY, 0, player, DIRECTIONS.RIGHT));
+            * console.log('\tup:', this.checkPlayer(posX, parseInt(posY) - 1, 0, player, DIRECTIONS.UP), 'down:', this.checkPlayer(posX, parseInt(posY) + 1, 0, player, DIRECTIONS.DOWN));
+            * console.log('\tupleft:', this.checkPlayer(parseInt(posX) - 1, parseInt(posY) - 1, 0, player, DIRECTIONS.UPLEFT), 'downright:', this.checkPlayer(parseInt(posX) + 1, parseInt(posY) + 1, 0, player, DIRECTIONS.DOWNRIGHT));
+            * console.log('\tupright:', this.checkPlayer(parseInt(posX) + 1, parseInt(posY) - 1, 0, player, DIRECTIONS.UPLEFT), 'downleft:', this.checkPlayer(parseInt(posX) - 1, parseInt(posY) + 1, 0, player, DIRECTIONS.DOWNRIGHT));
+            */
             return false;
         }
     }
     checkPlayer(posX, posY, amount, player, direction){
+        // console.log('checking', posX, '/', posY);
         if(posX < 0 || posX >= this.dimensions.x || posY < 0 || posY >= this.dimensions.y){
             return amount;
         } else if(this.board[posY][posX] == null || this.board[posY][posX].id != player.id){
