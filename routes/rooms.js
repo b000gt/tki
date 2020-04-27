@@ -9,7 +9,7 @@ router.get('/new', function(req, res, next) {
 });
 
 router.post('/add', function(req, res, next){
-  let newRoom = new Room(req.body.name, roomManager.getNextId(), req.session.user);
+  let newRoom = new Room(req.body.name, roomManager.getNextId(), req.session.user, req.body.players);
   roomManager.addRoom(newRoom);
   req.io.emit('toast', 'Room: ' + newRoom.name + ' created');
   req.io.emit('rooms changed');
@@ -25,10 +25,9 @@ router.get('/:id/enter', function(req, res, next){
         req.io.emit('entered room ' + room.id, req.session.user);
       }
       req.viewOptions['room'] = room;
-      console.log(room);
       res.render('room', req.viewOptions);
     } else{
-      req.session.warning = 'Room is Full';
+      req.session.warning = 'Room is already full';
       res.redirect('/overview');
     }
   } else{

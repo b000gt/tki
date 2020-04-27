@@ -3,5 +3,6 @@ module.exports = class User{
         this.name = name;
         this.id = id;
         this.room = null;
+        this.color = null;
     }
 };

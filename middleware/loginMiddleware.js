@@ -7,9 +7,10 @@ module.exports = function loginMiddleware(req, res, next){
             '/rooms/' + req.session.user.room + '/start',
             '/rooms/' + req.session.user.room + '/stop',
             '/rooms/' + req.session.user.room + '/delete',
+            '/logout',
         ];
     }
-    if((!req.session.user || req.session.user.name == '' ) && req.originalUrl != '/' && req.originalUrl != '/api'){
+    if((!req.session.user || req.session.user.name == '' ) && req.originalUrl != '/' && !req.originalUrl.startsWith('/api')){
         req.session.warning = 'Please log in first';
         console.log('redirecting to /');
         res.redirect('/');

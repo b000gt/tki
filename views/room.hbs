@@ -5,6 +5,7 @@
 <a href="#" id="start-room-{{room.id}}" class="btn">Start</a>
 <a href="#" id="stop-room-{{room.id}}" class="btn hide">Started</a>
 <a href="/rooms/{{room.id}}/leave" class="btn">Leave</a>
+<h3 id="winner" class="hide"><span id="winner-name"></span> &nbsp; HAS WON!!!</h3>
 <div class="hide col s12" id="board">
     <table>
         <thead>
@@ -12,7 +13,7 @@
             {{#with room.board.[0]}}
                 {{#each this}}
                 {{this}}
-                <th><a href="#" class="move btn" data-position="{{@index}}">{{@index}}</a></th>
+                <th><a href="#" class="move btn" data-position="{{@index}}">V</a></th>
                 {{/each}}
             {{/with}}
             </tr>
@@ -29,7 +30,7 @@
 <script src="/javascripts/room.js"></script>
 <script>
     const socket = io();
-    updateRoom({{room.id}});
+    init({{room.id}}, {{user.id}});
     socket.on('entered room ' + {{room.id}}, function(user){
         M.toast({
             html: user.name + ' entered this Room',
@@ -57,19 +58,5 @@
             }
         );
     });
-    $('#stop-room-{{room.id}}').click(function(){
-        fetch('/rooms/' + {{room.id}} + '/stop').then(
-                res => {
-                    socket.emit('change room', {{room.id}});
-                }
-        );
-    });
-    $('.move').click(function(obj){
-        let position = $(this).attr('data-position');
-        fetch('/api/rooms/' + {{room.id}} + '/play/'+position).then(
-                res => {
-                    socket.emit('change board', {{room.id}});
-                }
-        );
-    });
+
 </script>

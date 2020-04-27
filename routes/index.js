@@ -9,6 +9,21 @@ router.get('/', function(req, res, next){
     res.render('index');
 });
 
+router.get('/logout', function(req, res, next){
+  for(let index in roomManager.rooms){
+    if(roomManager.rooms[index].players[req.session.user.id]){
+      roomManager.rooms[index].leave(req.session.user);
+      if(Object.keys(roomManager.rooms[index].players).length == 0){
+        roomManager.deleteRoom(roomManager.rooms[index]);
+        req.io.emit('rooms changed');
+      }
+      req.io.emit('left room ' + roomManager.rooms[index].id, req.session.user);
+    }
+  }
+  delete req.session.user;
+  res.redirect('/');
+});
+
 router.get('/overview', function(req, res, next) {
   req.viewOptions['rooms'] = roomManager.rooms;
   res.render('overview', req.viewOptions);
@@ -16,9 +31,10 @@ router.get('/overview', function(req, res, next) {
 
 router.post('/', function(req, res, next){
   let user = new User(req.body.name, userManager.getNextId());
+  user.color = req.body.color;
   req.session.user = user;
   res.redirect('/overview');
-  req.io.emit('toast', 'User: ' + user.name + ' connected');
+  req.io.emit('toast', '<p class="'+user.color+'-text">User: ' + user.name + ' connected</p>');
 });
 
 module.exports = router;
