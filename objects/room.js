@@ -14,7 +14,7 @@ module.exports = class Room{
         this.board = {};
         this.resetBoard();
         this.winner = null;
-        this.turn = user.id;
+        this.turn = user;
     }
     canEnter(user){
         return Object.keys(this.players).length < this.limit || this.players[user.id];
@@ -30,6 +30,11 @@ module.exports = class Room{
         user.room = null;
     }
     start(){
+        this.hasStarted = true;
+    }
+    restart(){
+        this.winner = null;
+        this.resetBoard();
         this.hasStarted = true;
     }
     stop(){
@@ -108,15 +113,15 @@ module.exports = class Room{
         let isNext = this.turn == null;
         for(let index in this.players){
             if(isNext){
-                this.turn = index;
+                this.turn = this.players[index];
                 return true;
             }
-            if(this.turn == index){
+            if(this.turn.id == this.players[index].id){
                 isNext = true;
             }
         }
         for(let index in this.players){
-            this.turn = index;
+            this.turn = this.players[index];
             return true;
         }
     }

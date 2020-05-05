@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head>
+      <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+      <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+      <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+      <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+      <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+      <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+      <link rel="icon" type="image/png" sizes="192x192"  href="/favicon/android-icon-192x192.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+      <link rel="manifest" href="/favicon/manifest.json">
+      <meta name="msapplication-TileColor" content="#ffffff">
+      <meta name="msapplication-TileImage" content="/favicon/ms-icon-144x144.png">
+      <meta name="theme-color" content="#ffffff">
     <title>{{title}}</title>
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -12,28 +29,27 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-          $(function () {
-              var socket = io();
-              M.AutoInit();
-              socket.on('toast', function(msg){
-                  M.toast({
-                      html: msg,
-                      classes: 'rounded'
-                  });
-              });
-          });
-    </script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
       <div class="row">
           {{#if user.name}}
+          <ul id="color-dropdown" class="dropdown-content">
+              <li><a href="red" class="color-change red-text">Red</a></li>
+              <li><a href="purple" class="color-change purple-text">Purple</a></li>
+              <li><a href="indigo" class="color-change indigo-text">Blue</a></li>
+              <li><a href="teal" class="color-change teal-text">Green</a></li>
+              <li><a href="orange" class="color-change orange-text">Orange</a></li>
+              <li><a href="blue-grey" class="color-change blue-grey-text">Gray</a></li>
+              <li><a href="pink" class="color-change pink-text">Pink</a></li>
+              <li><a href="brown" class="color-change brown-text">Brown</a></li>
+              <li><a href="black" class="color-change black-text">Black</a></li>
+          </ul>
           <nav>
               <div class="nav-wrapper cyan darken-4 white-text">
                   <div class="col s12">
-                      <a href="/" class="brand-logo"><span class="lime-text text-lighten-4">4</span><span class="deep-purple-text text-lighten-4">Gewinnt</span></a>
-                      <span class="secondary-content"><span class="{{user.color}}-text white btn">{{user.name}}</span> &nbsp; <a class="btn" href="/logout">Logout</a></span>
+                      <a href="/" class="brand-logo">🅱️ier Gewinnt</a>
+                      <span class="secondary-content"><span class="{{user.color}}-text white btn dropdown-trigger" data-target="color-dropdown" id="user-btn">{{user.name}}</span> &nbsp; <a class="btn" href="/logout">Logout</a></span>
                   </div>
               </div>
           </nav>
@@ -56,6 +72,12 @@
             {{{body}}}
           </div>
           <script type="text/javascript" src="/javascripts/materialize.min.js"></script>
+          <script type="text/javascript" src="/javascripts/navbar.js"></script>
+          <script>
+              $(function () {
+                 init({{user.id}});
+              });
+          </script>
       </div>
   </body>
 </html>

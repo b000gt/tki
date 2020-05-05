@@ -9,6 +9,7 @@ const session = require('express-session');
 const indexRouter = require('./routes/index');
 const roomsRouter = require('./routes/rooms');
 const apiRoomsRouter = require('./routes/api/rooms');
+const apiUsersRouter = require('./routes/api/users');
 const loginMiddleware = require('./middleware/loginMiddleware');
 const viewOptionsMiddleware = require('./middleware/viewOptionsMiddleware');
 
@@ -52,6 +53,7 @@ app.use(viewOptionsMiddleware);
 app.use('/', indexRouter);
 app.use('/rooms', roomsRouter);
 app.use('/api/rooms', apiRoomsRouter);
+app.use('/api/users', apiUsersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

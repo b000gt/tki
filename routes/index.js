@@ -32,11 +32,15 @@ router.get('/overview', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next){
-  let user = new User(req.body.name, userManager.getNextId());
-  user.color = req.body.color;
-  req.session.user = user;
-  res.redirect('/overview');
-  req.io.emit('toast', '<p class="'+user.color+'-text">User: ' + user.name + ' connected</p>');
+  if(req.body.name){
+    let user = new User(req.body.name, userManager.getNextId());
+    user.color = req.body.color;
+    req.session.user = user;
+    res.redirect('/overview');
+    req.io.emit('toast', '<p class="'+user.color+'-text">User: ' + user.name + ' connected</p>');
+  } else{
+    res.redirect('/');
+  }
 });
 
 module.exports = router;

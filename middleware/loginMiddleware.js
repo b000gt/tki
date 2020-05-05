@@ -7,6 +7,7 @@ module.exports = function loginMiddleware(req, res, next){
             '/rooms/' + req.session.user.room + '/start',
             '/rooms/' + req.session.user.room + '/stop',
             '/rooms/' + req.session.user.room + '/delete',
+            '/rooms/' + req.session.user.room + '/restart',
             '/logout',
         ];
     }
@@ -18,7 +19,7 @@ module.exports = function loginMiddleware(req, res, next){
         console.log('redirecting to /overview');
         res.redirect('/overview');
     }
-    if(req.session.user && req.session.user.room != null && !(allowedInRoom.includes(req.originalUrl)|| req.originalUrl.startsWith('/api'))){
+    if(req.session.user && req.session.user.room != null && !(allowedInRoom.includes(req.originalUrl)|| req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/favicon'))){
         res.redirect('/rooms/' + req.session.user.room + '/leave');
     } else{
         next();

@@ -61,6 +61,14 @@ router.get('/:id/start', function(req, res){
   res.send();
 });
 
+router.get('/:id/restart', function(req, res) {
+  console.log('restart game..');
+  let room = roomManager.rooms[req.params.id];
+  if(room != undefined){
+    room.restart();
+  }
+  res.send();
+});
 router.get('/:id/stop', function(req, res){
   let room = roomManager.rooms[req.params.id];
   if(room != undefined){

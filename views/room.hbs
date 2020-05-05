@@ -3,9 +3,10 @@
     <li class="collection-item">ID<span class="secondary-content">{{room.id}}</span></li>
 </ul>
 <a href="#" id="start-room-{{room.id}}" class="btn">Start</a>
-<a href="#" id="stop-room-{{room.id}}" class="btn hide">Started</a>
+<a href="#" id="restart-room-{{room.id}}" class="btn hide">Restart</a>
 <a href="/rooms/{{room.id}}/leave" class="btn">Leave</a>
-<h3 id="winner" class="hide"><span id="winner-name"></span> &nbsp; HAS WON!!!</h3>
+<h6 class="hide" id="turn"><span id="player-turn"></span>'s Turn</h6>
+<h3 id="winner" class="hide"><span id="winner-name"></span> HAS WON!!!</h3>
 <div class="hide col s12" id="board">
     <table>
         <thead>
@@ -48,6 +49,9 @@
     socket.on('change room ' + {{room.id}}, function(roomId){
         updateRoom({{room.id}});
     });
+    socket.on('user changed', function(user){
+        updateRoom({{room.id}});
+    });
     socket.on('change board ' + {{room.id}}, function(roomId){
         updateBoard({{room.id}});
     });
@@ -56,6 +60,14 @@
             res => {
                 socket.emit('change room', {{room.id}});
             }
+        );
+    });
+    $('#restart-room-{{room.id}}').click(function(){
+        fetch('/rooms/' + {{room.id}} + '/restart').then(
+                res => {
+                    socket.emit('change room', {{room.id}});
+                    socket.emit('change board', {{room.id}});
+                }
         );
     });
 

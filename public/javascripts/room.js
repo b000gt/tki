@@ -18,14 +18,14 @@ function updateRoom(roomId){
             $('.player').remove();
             for(var playerId in data.players){
                 $('#room-infos').append('' +
-                    '<li class="collection-item player '+data.players[playerId].color+'-text" id="player-'+playerId+'">'+data.players[playerId].name+'</li>');
+                    '<li class="collection-item player '+data.players[playerId].color+'-text" id="player-'+playerId+'">'+data.players[playerId].name+'<span class="secondary-content '+data.players[playerId].color+'-text hide" id="'+playerId+'-turn-playerlist"><-</span></li>');
             }
             if(data.hasStarted){
+                $("#turn").removeClass('hide');
                 $("#start-room-"+roomId).addClass('hide');
-                $("#stop-room-"+roomId).removeClass('hide');
                 $("#board").removeClass('hide');
             } else{
-                $("#stop-room-"+roomId).addClass('hide');
+                $("#turn").addClass('hide');
                 $("#start-room-"+roomId).removeClass('hide');
                 $("#board").addClass('hide');
             }
@@ -40,13 +40,25 @@ function updateBoard(roomId){
     ).then(
         data => {
             if(data.winner) {
-                // $("#board").addClass('hide');
+                $("#turn").addClass('hide');
                 $("#winner").removeClass('hide');
                 $("#winner-name").text(data.winner.name);
                 $("#winner-name").addClass(data.winner.color+'-text');
+                $("#restart-room-"+data.id).removeClass('hide');
                 updateButtons(false);
             } else{
-                if(data.turn != globalUserId){
+                $("[id$=-turn-playerlist]").addClass('hide');
+                $("#"+data.turn.id+"-turn-playerlist").removeClass('hide');
+                $("#player-turn").text(data.turn.name);
+                $("#player-turn").removeClass(function(index, name){
+                    if(name.indexOf('-text') > 0){
+                        return name;
+                    }
+                });
+                $("#player-turn").addClass(data.turn.color + '-text');
+                $("#restart-room-"+data.id).addClass('hide');
+                $("#winner").addClass('hide');
+                if(data.turn.id != globalUserId){
                     updateButtons(false);
                 } else{
                     updateButtons(true);
@@ -56,7 +68,7 @@ function updateBoard(roomId){
             for (y = 0; y < data.dimensions.y; y++) {
                 for (x = 0; x < data.dimensions.x; x++) {
                     if (data.board[y][x] != null) {
-                        $("#board tr.data-row-" + y + " .data-pos-" + x).html('<span class="' + data.board[y][x].color + ' btn"></span>');
+                        $("#board tr.data-row-" + y + " .data-pos-" + x).html('<span class="' + data.board[y][x].color + ' btn" title="'+data.board[y][x].name+'"></span>');
                     } else {
                         $("#board tr.data-row-" + y + " .data-pos-" + x).html('<span class="grey btn"></span>');
                     }

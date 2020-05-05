@@ -3,3 +3,40 @@
     bottom: 2em;
     right: 2em;
 }
+.label{
+    border: 3px solid;
+    border-radius: 5px;
+    padding: 7px;
+    width: 113px;
+    display: block;
+}
+.label-red{
+    border-color: #F44336;
+}
+.label-purple{
+    border-color: #9c27b0;
+}
+.label-indigo{
+    border-color: #3f51b5;
+}
+.label-teal{
+    border-color: #009688;
+}
+.label-orange{
+    border-color: #ff9800;
+}
+.label-blue-grey{
+    border-color: #607d8b;
+}
+.label-pink{
+    border-color: #e91e63;
+}
+.label-brown{
+    border-color: #795548;
+}
+.label-black{
+    border-color: black;
+}
+.toast{
+    background: darkgrey;
+}
