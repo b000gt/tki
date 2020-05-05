@@ -15,24 +15,30 @@ module.exports = class Room{
         this.resetBoard();
         this.winner = null;
         this.turn = user;
+        this.lastChanged = new Date();
     }
     canEnter(user){
+        this.lastChanged = new Date();
         return Object.keys(this.players).length < this.limit || this.players[user.id];
     }
     enter(user){
+        this.lastChanged = new Date();
         if(!this.players[user.id]){
             this.players[user.id] = user;
             user.room = this.id;
         }
     }
     leave(user){
+        this.lastChanged = new Date();
         delete this.players[user.id];
         user.room = null;
     }
     start(){
+        this.lastChanged = new Date();
         this.hasStarted = true;
     }
     restart(){
+        this.lastChanged = new Date();
         this.winner = null;
         this.resetBoard();
         this.hasStarted = true;
@@ -41,6 +47,7 @@ module.exports = class Room{
         this.hasStarted = false;
     }
     put(position, player){
+        this.lastChanged = new Date();
         var y;
         for(y = 0; y < this.dimensions.y; y++){
             if((y+1) >= this.dimensions.y || this.board[(y+1)][position] != null){
@@ -98,6 +105,7 @@ module.exports = class Room{
         }
     }
     resetBoard(){
+        this.lastChanged = new Date();
         this.winner = null;
         let i;
         let y;
@@ -110,6 +118,7 @@ module.exports = class Room{
     }
 
     nextPlayer(){
+        this.lastChanged = new Date();
         let isNext = this.turn == null;
         for(let index in this.players){
             if(isNext){

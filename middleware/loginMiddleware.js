@@ -8,6 +8,7 @@ module.exports = function loginMiddleware(req, res, next){
             '/rooms/' + req.session.user.room + '/stop',
             '/rooms/' + req.session.user.room + '/delete',
             '/rooms/' + req.session.user.room + '/restart',
+            '/overview/noRedirect',
             '/logout',
         ];
     }
