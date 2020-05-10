@@ -40,3 +40,8 @@
 .toast{
     background: darkgrey;
 }
+.brand-logo img{
+    width: 90px;
+    margin-bottom: -9px;
+    border-radius: 7px;
+}
